@@ -12,31 +12,45 @@ bp = Blueprint('images', __name__, url_prefix='/images')
 
 
 @bp.route('/submit', methods=('GET', 'POST'))
-def register():
+def submit():
     if request.method == 'POST':
-        # username = request.form['username']
-        # password = request.form['password']
-        # db = get_db()
-        # error = None
+        error = None
 
-        # if not username:
-        #     error = 'Username is required.'
-        # elif not password:
-        #     error = 'Password is required.'
-        # elif db.execute(
-        #     'SELECT id FROM user WHERE username = ?', (username,)
-        # ).fetchone() is not None:
-        #     error = 'User {} is already registered.'.format(username)
+        file = request.files['img_submitted']
 
-        # if error is None:
-        #     db.execute(
-        #         'INSERT INTO user (username, password) VALUES (?, ?)',
-        #         (username, generate_password_hash(password))
-        #     )
-        #     db.commit()
-        #     return redirect(url_for('auth.login'))
+        print(file.read)
 
-        # flash(error)
-        pass
+        # check file size
 
-    return render_template('images/submit.html')
+        max_kb = 1000 # limit kilo bytes
+        size_bytes = len(file.read())
+        if size_bytes > max_kb*1000:
+            error = "El archivo subido (" + str(int(size_bytes/1000)) + " kB) supera el límite (" + str(max_kb) + " kB)"
+        if error is None:
+            ###
+            # Feed image to algorithm
+            result = "Normal"
+            probability = 0.95231546
+            ###
+            file.close()
+            return render_template(
+                'images/submit.html',
+                show_predictions_modal=True,
+                result = result,
+                probability = str(round(100.0 * probability, 1))
+                )
+
+        else:
+            flash(error)
+            file.close()
+            return render_template(
+                'images/submit.html',
+                show_predictions_modal=False
+                )
+
+
+    elif request.method == "GET":
+        return render_template(
+            'images/submit.html',
+            show_predictions_modal=False
+            )
