@@ -47,28 +47,40 @@
     </div>
   </div>
 
-  {% if get_flashed_messages() %}
-  <div class="row ml-0 mr-0">
-    <div class=" col-12 d-flex justify-content-center mt-3">
-      {% for message in get_flashed_messages() %}
-      <div class="text-danger">{{ message }}</div>
-        {% endfor %}
+
+  {% if show_predictions_modal %}
+  <br>
+  <hr>
+  <div class="row">
+    <div class="col-12 d-flex justify-content-center mb-4 mt-4">
+      <div class="card" style="width: 15rem;background-color: lightblue">
+      <strong><div align="center"> DIAGNÓSTICO DEL MODELO </div> </strong>
+        <img class="card-img-top" src="{{imagesource}}" alt="Your X-Ray Image">
+        <div class="card-body">
+          <h5 class="card-title">Resultado: {{categoria}}</h5>
+          <p class="card-text"> La probabilidad de acierto es del <strong>{{probabilidad}} %</strong></p>
+        </div>
+      </div>
     </div>
   </div>
+  <hr>
   {% endif %}
 
 
-  <div class="row">
 
+
+  <div class="row">
     <div class="col-12 d-flex justify-content-center mb-3">
-      <form class="mt-0 p-3 mb-4" method="post" autocomplete="off">
+      <form action="" class="mt-0 p-3 mb-4" method="post" autocomplete="off" enctype="multipart/form-data">
         <div class="form-group">
           <label for="FormControlFile1">Imagen X-Ray del pecho</label>
-          <input type="file"  accept="image/*" class="form-control-file" id="FormControlFile1">
+          <input type="file"  accept="image/*" class="form-control-file" id="file" name="file">
+          <input type="submit" value="Submit">
         </div>
       </form>
     </div>
   </div>
+
 </div>
 
 
